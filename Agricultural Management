@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=20">
+    <title>Agricultural Management System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('https://media.istockphoto.com/id/1429073633/photo/maize-seedling-in-cultivated-agricultural-field-with-graphic-concepts-modern-agricultural.jpg?s=612x612&w=0&k=20&c=eOykLrmibVP-GPQo5Mf4BgTt90Sf5U5m7O7hLxB5Rww=') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 20px;
+            border-radius: 60px;
+            box-shadow: 0 0 105px rgba(0, 0, 0, 0.2);
+            width: 60%;
+            max-width: 600px;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            margin: 10px 0 2px;
+        }
+
+        input {
+            padding: 10px;
+            border: 1px solid;
+            border-radius: 50px;
+            margin-bottom: 3px;
+            background-color: rgba(255,255, 255, 0.7)
+        }
+
+        button {
+            padding: 8px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            color: red;
+            text-align: center;
+            margin-top: 1px;
+        }
+
+        #dataSection {
+            margin-top: 50px;
+        }
+
+        #dataList, #weatherList, #logisticsList, #orderList, #cartList, #menuList, #productList, #orderHistoryList, #addressSection, #recommendationList {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #dataList li, #weatherList li, #logisticsList li, #orderList li, #cartList li, #menuList li, #productList li, #orderHistoryList li, #addressSection li, #recommendationList li {
+            background: #e9ecef;
+            padding: 10px;
+            margin-bottom: 1px;
+            border-radius: 50px;
+        }
+
+        .auth-form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .auth-form button {
+            background-color: #007bff;
+            margin:2px;
+        }
+
+        .auth-form button:hover {
+            background-color: #0056b3;
+        }
+
+        .section {
+            margin-top: 2px;
+        }
+
+        .section h2 {
+            margin-top: 0;
+        }
+
+        #navigation {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+
+        #navigation button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #navigation button:hover {
+            background-color: #0056b3;
+        }
+
+        /* New Style for Location Display */
+        #locationSection {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        /* White text color for recommendations */
+        #recommendationList li {
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+        <div class="container">
+            <!-- Location Display -->
+            <div id="locationSection">
+                <p>Your Location: <span id="userLocation">Fetching location...</span></p>
+            </div>
+
+            <div id="loginSection">
+                <h1>Login</h1>
+                <form id="loginForm" class="auth-form">
+                    <label for="loginUsername">Username</label>
+                    <input type="text" id="loginUsername" placeholder="Username" required>
+                    
+                    <label for="loginPassword">Password</label>
+                    <input type="password" id="loginPassword" placeholder="Password" required>
+                    <button type="button"><i class="fab fa-google"></i></button>
+                    <button type="button"><i class="fab fa-apple"></i></button>
+                    <button type="submit">Login</button>
+                    <p class="alert" id="loginAlert"></p>
+                </form>
+                <p style="text-align: center;">Don't have an account? <a href="#" id="showSignup">Create one here</a></p>
+            </div>
+        </div>
+
+        <div id="signupSection" class="hidden">
+            <h1>Create Account</h1>
+            <form id="signupForm" class="auth-form">
+                <label for="signupUsername">Username</label>
+                <input type="text" id="signupUsername" required>
+                
+                <label for="signupPassword">Password</label>
+                <input type="password" id="signupPassword" required>
+                
+                <label for="mobileNumber">Mobile Number</label>
+                <input type="text" id="mobileNumber" required>
+                
+                <label for="email">Email</label>
+                <input type="email" id="email" required>
+                
+                <button type="button"><i class="fab fa-google"></i></button>
+                <button type="button"><i class="fab fa-apple"></i></button>
+                <button type="submit">Create Account</button>
+                <p class="alert" id="signupAlert"></p>
+            </form>
+            <p style="text-align: center;">Already have an account? <a href="#" id="showLogin">Login here</a></p>
+        </div>
+
+        <div id="dataSection" class="hidden">
+            <div id="navigation">
+                <button id="homeBtn"><i class="fas fa-home"></i></button>
+                <button id="cartBtn"><i class="fas fa-shopping-cart"></i></button>
+                <button id="profileBtn"><i class="fas fa-user"></i></button>
+                <button id="searchBtn"><i class="fas fa-search"></i></button>
+                <button id="menuBtn"><i class="fas fa-bars"></i></button>
+            </div>
+            <h1>Agricultural Management</h1>
+
+            <!-- Home Section -->
+            <div class="section" id="homeSection">
+                <h2>Soil and Crop Health Monitoring</h2>
+                <form id="soilForm">
+                    <label for="moisture">Moisture (%)</label>
+                    <input type="number" id="moisture" name="moisture" required>
+                    
+                    <label for="temperature">Temperature (°C)</label>
+                    <input type="number" id="temperature" name="temperature" required>
+                    
+                    <label for="ph">pH</label>
+                    <input type="number" id="ph" name="ph" step="0.1" required>
+                    
+                    <label for="fertilizer">fertilizer</label>
+                    <input type="number" id="fertilizer"name="fertilizer" required>
+                    <button type="submit">Submit Soil Data</button>
+                </form>
+                <div id="soilData">
+                    <h2>Sensor Data</h2>
+                    <ul id="dataList"></ul>
+                </div>
+            </div>
+
+            <!-- Cart Section -->
+            <div class="section hidden" id="cartSection">
+                <h2>Cart</h2>
+                <ul id="cartList">
+                    <!-- Mock data for cart -->
+                    <li>Item: Fertilizer, Quantity: 2, Price: ₹1,500 <button onclick="buyNow()">Buy Now</button></li>
+                    <li>Item: Seeds, Quantity: 10, Price: ₹500 <button onclick="buyNow()">Buy Now</button></li>
+                </ul>
+            </div>
+
+            <!-- Payment Section -->
+            <div class="section hidden" id="paymentSection">
+                <h2>Payment</h2>
+                <form id="paymentForm">
+                    <label for="paymentAmount">Amount to be paid:</label>
+                    <input type="text" id="paymentAmount" disabled>
+
+                    <label for="paymentMethod">Select Payment Method:</label>
+                    <select id="paymentMethod" name="paymentMethod">
+                        <option value="credit">Credit Card</option>
+                        <option value="debit">Debit Card</option>
+                        <option value="netbanking">Net Banking</option>
+                        <option value="upi">UPI</option>
+                    </select>
+
+                    <button type="submit">Pay Now</button>
+                </form>
+                <p id="paymentStatus"></p>
+            </div>
+
+            <!-- Menu Section -->
+            <div class="section hidden" id="menuSection">
+                <h2>Order History</h2>
+                <ul id="orderHistoryList">
+                    <li>Order 1: Tractor, Delivered, Price: ₹7,50,000</li>
+                    <li>Order 2: Irrigation System, Pending, Price: ₹1,50,000</li>
+                    <li>Order 3: Plough, Delivered, Price: ₹10,000</li>
+                </ul>
+            </div>
+
+            <!-- Search Section -->
+            <div class="section hidden" id="searchSection">
+                <h2>Search Products</h2>
+                <input type="text" id="searchInput" placeholder="Search for products...">
+                <ul id="productList">
+                    <!-- Mock data for products -->
+                    <li>Product: Tractor, Price: ₹7,50,000 <button onclick="addToCart(1)">Add to Cart</button></li>
+                    <li>Product: Irrigation System, Price: ₹1,50,000 <button onclick="addToCart(2)">Add to Cart</button></li>
+                    <li>Product: Fertilizer, Price: ₹1,500 <button onclick="addToCart(3)">Add to Cart</button></li>
+                </ul>
+
+                <!-- Product Recommendations -->
+                <h3>Recommended Products</h3>
+                <ul id="recommendationList">
+                    <li>Product: Pesticides, Price: ₹1,000</li>
+                    <li>Product: Seed Drill, Price: ₹1,25,000</li>
+                    <li>Product: Combine Harvester, Price: ₹15,00,000</li>
+                </ul>
+
+    
+                <h4>Customer Care</h4>
+                    <ul id="customerCareList">
+                    <li>Phone: 1800-123-4567</li>
+                    <li>Email: support@agriculture.com</li>
+                    <li>Working Hours: 9 AM - 6 PM, Monday to Saturday</li>
+                </ul>
+            </div>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
+    <script>
+        const validUsername = '1234';
+        const validPassword = '1234';
+
+        const mockCartItems = [
+            { id: 1, item: 'Fertilizer', quantity: 2, price: 1500 },
+            { id: 2, item: 'Seeds', quantity: 10, price: 500 }
+        ];
+
+        const mockProducts = [
+            { id: 1, item: 'Tractor', price: '₹7,50,000' },
+            { id: 2, item: 'Irrigation System', price: '₹1,50,000' },
+            { id: 3, item: 'Fertilizer', price: '₹1,500' }
+        ];
+
+        const mockOrderHistory = [
+            { id: 1, item: 'Tractor', status: 'Delivered', price: '₹7,50,000' },
+            { id: 2, item: 'Irrigation System', status: 'Pending', price: '₹1,50,000' },
+            { id: 3, item: 'Plough', status: 'Delivered', price: '₹10,000' }
+        ];
+
+        let userAddress = '';
+        let currentPaymentAmount = 0;
+
+        function showSignup() {
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('signupSection').classList.remove('hidden');
+        }
+
+        function showLogin() {
+            document.getElementById('signupSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+
+            if (username === validUsername && password === validPassword) {
+                document.getElementById('loginSection').classList.add('hidden');
+                document.getElementById('dataSection').classList.remove('hidden');
+                displaySection('home');
+            } else {
+                document.getElementById('loginAlert').textContent = 'Invalid username or password';
+            }
+        }
+
+        function handleSignup(event) {
+            event.preventDefault();
+            // Perform signup logic here
+            alert('Signup functionality is not implemented yet.');
+        }
+
+        function logout() {
+            document.getElementById('dataSection').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function fetchData() {
+            const dataList = document.getElementById('dataList');
+            const moisture = document.getElementById('moisture').value;
+            const temperature = document.getElementById('temperature').value;
+            const ph = document.getElementById('ph').value;
+            const Fertilizer=document.getElementById('fertilizer').value;
+
+            const dataItem = document.createElement('li');
+            dataItem.textContent = `Moisture: ${moisture}%, Temperature: ${temperature}°C, pH: ${ph}`;
+            dataList.appendChild(dataItem);
+        }
+
+        function displaySection(section) {
+            const sections = ['home', 'cart', 'menu', 'search', 'payment'];
+            sections.forEach(s => {
+                document.getElementById(`${s}Section`).classList.add('hidden');
+            });
+            document.getElementById(`${section}Section`).classList.remove('hidden');
+        }
+
+        function addToCart(productId) {
+            const product = mockProducts.find(p => p.id === productId);
+            alert(`${product.item} has been added to your cart.`);
+        }
+
+        function buyNow() {
+            displaySection('payment');
+            currentPaymentAmount = mockCartItems.reduce((total, item) => total + item.price, 0);
+            document.getElementById('paymentAmount').value = `₹${currentPaymentAmount}`;
+        }
+
+        function handlePayment(event) {
+            event.preventDefault();
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            document.getElementById('paymentStatus').textContent = `Payment of ₹${currentPaymentAmount} via ${paymentMethod} was successful.`;
+
+            // Add items to order history and reset cart
+            mockCartItems.forEach(item => {
+                mockOrderHistory.push({
+                    id: mockOrderHistory.length + 1,
+                    item: item.item,
+                    status: 'Pending',
+                    price: `₹${item.price}`
+                });
+            });
+
+            // Clear cart
+            mockCartItems.length = 0;
+            document.getElementById('cartList').innerHTML = '<li>Your cart is empty.</li>';
+        }
+
+        // Geolocation API to fetch user's location
+        function fetchLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(showLocation, showError);
+            } else {
+                document.getElementById('userLocation').textContent = "Geolocation is not supported by this browser.";
+            }
+        }
+
+        function showLocation(position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            document.getElementById('userLocation').textContent = `Lat: ${latitude}, Lon: ${longitude}`;
+        }
+
+        function showError(error) {
+            switch(error.code) {
+                case error.PERMISSION_DENIED:
+                    document.getElementById('userLocation').textContent = "User denied the request for Geolocation.";
+                    break;
+                case error.POSITION_UNAVAILABLE:
+                    document.getElementById('userLocation').textContent = "Location information is unavailable.";
+                    break;
+                case error.TIMEOUT:
+                    document.getElementById('userLocation').textContent = "The request to get user location timed out.";
+                    break;
+                case error.UNKNOWN_ERROR:
+                    document.getElementById('userLocation').textContent = "An unknown error occurred.";
+                    break;
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        document.getElementById('signupForm').addEventListener('submit', handleSignup);
+        document.getElementById('soilForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            fetchData();
+        });
+
+        document.getElementById('homeBtn').addEventListener('click', () => displaySection('home'));
+        document.getElementById('cartBtn').addEventListener('click', () => displaySection('cart'));
+        document.getElementById('menuBtn').addEventListener('click', () => displaySection('menu'));
+        document.getElementById('searchBtn').addEventListener('click', () => displaySection('search'));
+
+        document.getElementById('paymentForm').addEventListener('submit', handlePayment);
+
+        document.getElementById('orderHistoryBtn').addEventListener('click', () => {
+            document.getElementById('orderHistorySection').classList.toggle('hidden');
+        });
+
+        document.getElementById('addressBtn').addEventListener('click', () => {
+            document.getElementById('addressSection').classList.toggle('hidden');
+        });
+
+        document.getElementById('addressForm').addEventListener('submit', (event) => {
+            event.preventDefault();
+            userAddress = document.getElementById('address').value;
+            alert('Address updated.');
+        });
+
+        document.getElementById('showSignup').addEventListener('click', showSignup);
+        document.getElementById('showLogin').addEventListener('click', showLogin);
+
+        window.onload = fetchLocation;
+            function getBackgroundColor(moisture, temperature, ph) {
+                let color;
+        
+                if (moisture < 20) {
+                    color = "#f8d7da"; // Light Red for low moisture
+                } else if (moisture >= 20 && moisture < 50) {
+                    color = "#fff3cd"; // Light Yellow for moderate moisture
+                } else {
+                    color = "#d4edda"; // Light Green for good moisture
+                }
+        
+                if (temperature > 35) {
+                    color = "#f5c6cb"; // Light Red for high temperature
+                } else if (temperature >= 25 && temperature <= 35) {
+                    color = "#c3e6cb"; // Light Green for optimal temperature
+                } else if (temperature < 25) {
+                    color = "#bee5eb"; // Light Blue for low temperature
+                }
+        
+                if (ph < 6) {
+                    color = "#d1ecf1"; // Light Blue for acidic pH
+                } else if (ph >= 6 && ph <= 7.5) {
+                    color = "#c3e6cb"; // Light Green for neutral pH
+                } else {
+                    color = "#f5c6cb"; // Light Red for alkaline pH
+                }
+        
+                return color;
+            }
+        
+            function fetchData() {
+                const dataList = document.getElementById('dataList');
+                const moisture = document.getElementById('moisture').value;
+                const temperature = document.getElementById('temperature').value;
+                const ph = document.getElementById('ph').value;
+        
+                const dataItem = document.createElement('li');
+                dataItem.textContent = `Moisture: ${moisture}%, Temperature: ${temperature}°C, pH: ${ph}`;
+                dataItem.style.backgroundColor = getBackgroundColor(moisture, temperature, ph);
+        
+                dataList.appendChild(dataItem);
+            }
+        
+            document.getElementById('soilForm').addEventListener('submit', (event) => {
+                event.preventDefault();
+                fetchData();
+            });
+        
+    </script>
+</body>
+</html>
